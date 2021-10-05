@@ -161,7 +161,7 @@ const SearchBooks = () => {
                         (savedBookId) => savedBookId === book.bookId
                       )}
                       className="btn-block btn-info"
-                      onClick={() => handleSaveBook(book.bookId)}
+                      onClick={() => handleSaveBook()}
                     >
                       {savedBookIds?.some(
                         (savedBookId) => savedBookId === book.bookId

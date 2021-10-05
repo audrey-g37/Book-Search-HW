@@ -4,12 +4,12 @@ const { signToken } = require("../utils/auth");
 
 const resolvers = {
   Query: {
-    users: async () => {
-      return User.find().populate("savedBooks");
-    },
-    user: async (parent, { userId }) => {
-      return User.findOne({ _id: userId }).populate("savedBooks");
-    },
+    // users: async () => {
+    //   return User.find().populate("savedBooks");
+    // },
+    // user: async (parent, { userId }) => {
+    //   return User.findOne({ _id: userId }).populate("savedBooks");
+    // },
     // savedBooks: async (parent, { userId }) => {
     //   // const params = userId ? { userId } : {};
     //   return Book.find(params).sort({ createdAt: -1 });
@@ -17,7 +17,7 @@ const resolvers = {
     // book: async (parent, { bookId }) => {
     //   return Book.findOne({ _id: bookId });
     // },
-    me: async (parent, context) => {
+    me: async (parent, args, context) => {
       if (context.user) {
         return User.findOne({ _id: context.user._id }).populate("savedBooks");
       }
@@ -48,15 +48,11 @@ const resolvers = {
 
       return { token, user };
     },
-    saveBook: async (
-      parent,
-      { authors, description, bookId, image, link, title },
-      context
-    ) => {
+    saveBook: async (parent, { bookData }, context) => {
       if (context.user) {
         const userUpdate = await User.findOneAndUpdate(
           { _id: context.user._id },
-          { $addToSet: { savedBooks: bookId } },
+          { $apush: { savedBooks: bookData } },
           { new: true, runValidators: true }
         );
 
