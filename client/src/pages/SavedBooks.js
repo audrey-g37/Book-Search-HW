@@ -13,7 +13,7 @@ import { REMOVE_BOOK } from "../utils/mutations";
 // import { getMe, deleteBook } from '../utils/API';
 import { Redirect, useParams } from "react-router";
 import Auth from "../utils/auth";
-import { User } from "../../../server/models";
+// import { User } from "../../server/models";
 // import { removeBookId } from '../utils/localStorage';
 
 const SavedBooks = () => {
