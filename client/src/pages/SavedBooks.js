@@ -6,57 +6,56 @@ import {
   Card,
   Button,
 } from "react-bootstrap";
-
+import { Link } from "react-router-dom";
+import { useQuery, useMutation } from "@apollo/client";
 import { QUERY_ME } from "../utils/queries";
 import { REMOVE_BOOK } from "../utils/mutations";
 // import { getMe, deleteBook } from '../utils/API';
-import Auth from "../utils/auth";
 import { Redirect, useParams } from "react-router";
-import { useQuery } from "@apollo/client";
+import Auth from "../utils/auth";
+import { User } from "../../../server/models";
 // import { removeBookId } from '../utils/localStorage';
 
 const SavedBooks = () => {
   const [userData, setUserData] = useState({});
 
   // use this to determine if `useEffect()` hook needs to run again
-  const userDataLength = Object.keys(userData).length;
+  // const userDataLength = Object.keys(userData).length;
 
-  const getUserData = async () => {
-    const { userId } = useParams();
+  const userId = useParams();
 
-    const { loading, data } = useQuery(QUERY_ME, {
-      variables: { userId: userId },
-    });
+  const { loading, data } = useQuery(QUERY_ME, {
+    variables: { userId: userId },
+  });
 
-    const userData = data?.me || data?.user || {};
+  const userInfo = data?.me || data?.user || {};
 
-    if (loading) {
-      return <div>Loading...</div>;
-    }
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-    if (!userData?.username) {
-      return <h4>You need to be logged in to use this feature.</h4>;
-    }
+  if (!userInfo?.username) {
+    return <h4>You need to be logged in to use this feature.</h4>;
+  }
 
-    try {
-      const token = Auth.loggedIn() ? Auth.getToken() : null;
+  // try {
+  //   const token = Auth.loggedIn() ? Auth.getToken() : null;
 
-      if (!token) {
-        return false;
-      }
+  //   if (!token) {
+  //     return false;
+  //   }
 
-      const response = await getMe(token);
+  //   const response = await getMe(token);
 
-      if (!response.ok) {
-        throw new Error("something went wrong!");
-      }
+  //   if (!response.ok) {
+  //     throw new Error("something went wrong!");
+  //   }
 
-      const user = await response.json();
-      setUserData(user);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  //   const user = await response.json();
+  //   setUserData(user);
+  // } catch (err) {
+  //   console.error(err);
+  // }
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
@@ -65,25 +64,41 @@ const SavedBooks = () => {
     if (!token) {
       return false;
     }
+    // const bookId = useParams();
 
-    try {
-      const response = await deleteBook(bookId, token);
+    const { data } = await (REMOVE_BOOK,
+    {
+      variables: { bookId: bookId },
+    });
 
-      if (!response.ok) {
-        throw new Error("something went wrong!");
-      }
+    const userInfo = data?.me || data?.user || {};
 
-      const updatedUser = await response.json();
-      setUserData(updatedUser);
-      // upon success, remove book's id from localStorage
-      removeBookId(bookId);
-    } catch (err) {
-      console.error(err);
+    if (loading) {
+      return <div>Loading...</div>;
     }
+
+    if (!userInfo?.username) {
+      return <h4>You need to be logged in to use this feature.</h4>;
+    }
+
+    // try {
+    //   const response = await deleteBook(bookId, token);
+
+    //   if (!response.ok) {
+    //     throw new Error("something went wrong!");
+    //   }
+
+    //   const updatedUser = await response.json();
+    //   setUserData(updatedUser);
+    //   // upon success, remove book's id from localStorage
+    //   removeBookId(bookId);
+    // } catch (err) {
+    //   console.error(err);
+    // }
   };
 
   // if data isn't here yet, say so
-  if (!userDataLength) {
+  if (!userInfo) {
     return <h2>LOADING...</h2>;
   }
 

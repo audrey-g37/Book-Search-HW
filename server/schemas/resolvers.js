@@ -7,16 +7,16 @@ const resolvers = {
     users: async () => {
       return User.find().populate("savedBooks");
     },
-    user: async (parent, { username }) => {
-      return User.findOne({ username }).populate("savedBooks");
+    user: async (parent, { userId }) => {
+      return User.findOne({ _id: userId }).populate("savedBooks");
     },
-    savedBooks: async (parent, { username }) => {
-      const params = username ? { username } : {};
-      return Book.find(params).sort({ createdAt: -1 });
-    },
-    book: async (parent, { bookId }) => {
-      return Book.findOne({ _id: bookId });
-    },
+    // savedBooks: async (parent, { userId }) => {
+    //   // const params = userId ? { userId } : {};
+    //   return Book.find(params).sort({ createdAt: -1 });
+    // },
+    // book: async (parent, { bookId }) => {
+    //   return Book.findOne({ _id: bookId });
+    // },
     me: async (parent, context) => {
       if (context.user) {
         return User.findOne({ _id: context.user._id }).populate("savedBooks");
@@ -48,12 +48,15 @@ const resolvers = {
 
       return { token, user };
     },
-    saveBook: async (parent, bookText, context) => {
-      console.log(bookText);
+    saveBook: async (
+      parent,
+      { authors, description, bookId, image, link, title },
+      context
+    ) => {
       if (context.user) {
         const userUpdate = await User.findOneAndUpdate(
           { _id: context.user._id },
-          { $addToSet: { savedBooks: bookText.bookId } },
+          { $addToSet: { savedBooks: bookId } },
           { new: true, runValidators: true }
         );
 
