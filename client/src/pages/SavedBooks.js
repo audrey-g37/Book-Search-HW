@@ -14,7 +14,7 @@ import { REMOVE_BOOK } from "../utils/mutations";
 import { Redirect, useParams } from "react-router";
 import Auth from "../utils/auth";
 // import { User } from "../../server/models";
-// import { removeBookId } from '../utils/localStorage';
+import { removeBookId } from "../utils/localStorage";
 
 const SavedBooks = () => {
   const [userData, setUserData] = useState({});
