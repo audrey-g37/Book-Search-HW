@@ -6,12 +6,12 @@ import {
   Card,
   Button,
 } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import { useQuery, useMutation } from "@apollo/client";
 import { QUERY_ME } from "../utils/queries";
 import { REMOVE_BOOK } from "../utils/mutations";
 // import { getMe, deleteBook } from '../utils/API';
-import { Redirect, useParams } from "react-router";
+import { useParams } from "react-router";
 import Auth from "../utils/auth";
 // import { User } from "../../server/models";
 import { removeBookId } from "../utils/localStorage";
@@ -22,28 +22,33 @@ const SavedBooks = () => {
   // use this to determine if `useEffect()` hook needs to run again
   // const userDataLength = Object.keys(userData).length;
 
-  const userId = useParams();
+  const {username: userParam} = useParams();
 
-  const { loading, data } = useQuery(QUERY_ME, {
-    variables: { userId: userId },
+  const { loading, data } = useQuery(userParam ? QUERY_ME : QUERY_ME, {
+    variables: { userId: userParam },
   });
 
   const userInfo = data?.me || data?.user || {};
+
 
   if (loading) {
     return <div>Loading...</div>;
   }
 
-  if (!userInfo?.username) {
-    return <h4>You need to be logged in to use this feature.</h4>;
+  if (Auth.loggedIn() && !Auth.getProfile().data.username === userParam) {
+    return <Redirect to="/saved" />
   }
 
+if (!userInfo?.username) {
+  return <h4>You need to be logged in to use this feature.</h4>;
+}
   // try {
   //   const token = Auth.loggedIn() ? Auth.getToken() : null;
 
   //   if (!token) {
   //     return false;
   //   }
+  //   return token;
 
   //   const response = await getMe(token);
 
@@ -77,10 +82,6 @@ const SavedBooks = () => {
       return <div>Loading...</div>;
     }
 
-    if (!userInfo?.username) {
-      return <h4>You need to be logged in to use this feature.</h4>;
-    }
-
     // try {
     //   const response = await deleteBook(bookId, token);
 
@@ -98,9 +99,7 @@ const SavedBooks = () => {
   };
 
   // if data isn't here yet, say so
-  if (!userInfo) {
-    return <h2>LOADING...</h2>;
-  }
+
 
   return (
     <>

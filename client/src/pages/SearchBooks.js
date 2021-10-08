@@ -76,6 +76,7 @@ const SearchBooks = () => {
     //   varialbes: { bookId: bookId },
     // });
     const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
+    
     // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
@@ -161,7 +162,7 @@ const SearchBooks = () => {
                         (savedBookId) => savedBookId === book.bookId
                       )}
                       className="btn-block btn-info"
-                      onClick={() => handleSaveBook()}
+                      onClick={() => handleSaveBook(book.id)}
                     >
                       {savedBookIds?.some(
                         (savedBookId) => savedBookId === book.bookId
