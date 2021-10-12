@@ -22,6 +22,12 @@ A user needs to create an account to be able to save books.
 
 ![Image of Site](./assets/screenshot.png)
 
+[Live Site](https://secure-taiga-23715.herokuapp.com/)
+
+## Credits
+
+Application uses Google's book Api.
+
 ## License
 
 This project is licensed with MIT.
