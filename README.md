@@ -22,6 +22,8 @@ A user needs to create an account to be able to save books.
 
 ![Image of Site](./assets/screenshot.png)
 
+[Live Site](https://dashboard.heroku.com/apps/secure-taiga-23715)
+
 ## License
 
 This project is licensed with MIT.
