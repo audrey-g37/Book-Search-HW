@@ -30,9 +30,6 @@ const SavedBooks = () => {
 
   const userInfo = data?.me || data?.user || {};
 
-  console.log(userInfo);
-  console.log(userData);
-
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -109,14 +106,14 @@ const SavedBooks = () => {
       </Jumbotron>
       <Container>
         <h2>
-          {userInfo.savedBooks.length
+          {userInfo.savedBooks.length >0
             ? `Viewing ${userInfo.savedBooks.length} saved ${
                 userInfo.savedBooks.length === 1 ? "book" : "books"
               }:`
             : "You have no saved books!"}
         </h2>
         <CardColumns>
-          {userData.savedBooks.map((book) => {
+          {userInfo.savedBooks.map((book) => {
             return (
               <Card key={book.bookId} border="dark">
                 {book.image ? (
