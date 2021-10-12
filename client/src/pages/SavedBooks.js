@@ -20,9 +20,9 @@ const SavedBooks = () => {
   const [userData, setUserData] = useState({});
 
   // use this to determine if `useEffect()` hook needs to run again
-  // const userDataLength = Object.keys(userData).length;
+  const userDataLength = Object.keys(userData).length;
 
-  const {username: userParam} = useParams();
+  const { username: userParam } = useParams();
 
   const { loading, data } = useQuery(userParam ? QUERY_ME : QUERY_ME, {
     variables: { userId: userParam },
@@ -30,18 +30,20 @@ const SavedBooks = () => {
 
   const userInfo = data?.me || data?.user || {};
 
+  console.log(userInfo);
+  console.log(userData);
 
   if (loading) {
     return <div>Loading...</div>;
   }
 
   if (Auth.loggedIn() && !Auth.getProfile().data.username === userParam) {
-    return <Redirect to="/saved" />
+    return <Redirect to="/saved" />;
   }
 
-if (!userInfo?.username) {
-  return <h4>You need to be logged in to use this feature.</h4>;
-}
+  if (!Auth.loggedIn()) {
+    return <h4>You need to be logged in to use this feature.</h4>;
+  }
   // try {
   //   const token = Auth.loggedIn() ? Auth.getToken() : null;
 
@@ -76,8 +78,6 @@ if (!userInfo?.username) {
       variables: { bookId: bookId },
     });
 
-    const userInfo = data?.me || data?.user || {};
-
     if (loading) {
       return <div>Loading...</div>;
     }
@@ -100,7 +100,6 @@ if (!userInfo?.username) {
 
   // if data isn't here yet, say so
 
-
   return (
     <>
       <Jumbotron fluid className="text-light bg-dark">
@@ -109,10 +108,10 @@ if (!userInfo?.username) {
         </Container>
       </Jumbotron>
       <Container>
-        <h2>
-          {userData.savedBooks.length
-            ? `Viewing ${userData.savedBooks.length} saved ${
-                userData.savedBooks.length === 1 ? "book" : "books"
+        {/* <h2>
+          {userInfo.savedBooks.length
+            ? `Viewing ${userInfo.savedBooks.length} saved ${
+                userInfo.savedBooks.length === 1 ? "book" : "books"
               }:`
             : "You have no saved books!"}
         </h2>
@@ -141,7 +140,7 @@ if (!userInfo?.username) {
               </Card>
             );
           })}
-        </CardColumns>
+        </CardColumns> */}
       </Container>
     </>
   );

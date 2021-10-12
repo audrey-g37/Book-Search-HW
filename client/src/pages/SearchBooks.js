@@ -9,13 +9,12 @@ import {
   CardColumns,
 } from "react-bootstrap";
 
-import { useParams } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 
-import Auth from "../utils/auth";
-import { saveBook, searchGoogleBooks } from "../utils/API";
-import { saveBookIds, getSavedBookIds } from "../utils/localStorage";
+import { searchGoogleBooks } from "../utils/API";
 import { SAVE_BOOK } from "../utils/mutations";
+import { saveBookIds, getSavedBookIds } from "../utils/localStorage";
+import Auth from "../utils/auth";
 
 const SearchBooks = () => {
   // create state for holding returned google api data
@@ -34,6 +33,7 @@ const SearchBooks = () => {
     return () => saveBookIds(savedBookIds);
   });
 
+  console.log(savedBookIds);
   // create method to search for books and set state on form submit
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -75,8 +75,10 @@ const SearchBooks = () => {
     // const { loading, data } = useMutation(SAVE_BOOK, {
     //   varialbes: { bookId: bookId },
     // });
-    const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
-    
+    const bookToSave = await searchedBooks.find((book) => book.bookId === bookId);
+
+    console.log(bookToSave);
+
     // get token
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
@@ -86,7 +88,9 @@ const SearchBooks = () => {
 
     try {
       const { data } = await saveBook({
-        variables: { Book: { ...bookToSave } },
+        variables: { input: { ...bookToSave } },
+      }).then((data) => {
+        console.log(data);
       });
       // if book successfully saves to user's account, save book id to state
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
@@ -162,7 +166,7 @@ const SearchBooks = () => {
                         (savedBookId) => savedBookId === book.bookId
                       )}
                       className="btn-block btn-info"
-                      onClick={() => handleSaveBook(book.id)}
+                      onClick={() => handleSaveBook(book.bookId)}
                     >
                       {savedBookIds?.some(
                         (savedBookId) => savedBookId === book.bookId
