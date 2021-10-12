@@ -108,7 +108,7 @@ const SavedBooks = () => {
         </Container>
       </Jumbotron>
       <Container>
-        {/* <h2>
+        <h2>
           {userInfo.savedBooks.length
             ? `Viewing ${userInfo.savedBooks.length} saved ${
                 userInfo.savedBooks.length === 1 ? "book" : "books"
@@ -140,7 +140,7 @@ const SavedBooks = () => {
               </Card>
             );
           })}
-        </CardColumns> */}
+        </CardColumns>
       </Container>
     </>
   );
